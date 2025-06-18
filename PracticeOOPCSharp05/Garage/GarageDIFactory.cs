@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace PracticeOOPCSharp05.Garage
 {
-    internal interface IGarageFactory
+    internal interface IGarageDIFactory
     {
         IGarage<IVehicle> CreateGarage(int capacity);
     }
 
-    internal class GarageFactory : IGarageFactory
+    internal class GarageDIFactory : IGarageDIFactory
     {
         public IGarage<IVehicle> CreateGarage(int capacity)
         {

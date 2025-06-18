@@ -4,7 +4,7 @@ using System.Collections;
 
 public class Garage<T> : IGarage<T> where T : IVehicle
 {
-    private readonly T?[] _vehicles; // массив может содержать null для свободных мест
+    private readonly T?[] _vehicles;
     private int _count = 0;
 
     public int Count => _count;

@@ -5,7 +5,7 @@ using PracticeOOPCSharp05.UI;
 
 var services = new ServiceCollection();
 
-services.AddSingleton<IGarageFactory, GarageFactory>();
+services.AddSingleton<IGarageDIFactory, GarageDIFactory>();
 services.AddSingleton<IGarageHandler, GarageHandler>();
 services.AddSingleton<IUI, ConsoleUI>();
 

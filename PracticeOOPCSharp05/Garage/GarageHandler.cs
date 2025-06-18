@@ -4,12 +4,12 @@ namespace PracticeOOPCSharp05.Garage
 {
     internal class GarageHandler : IGarageHandler
     {
-        private readonly IGarageFactory _garageFactory;
+        private readonly IGarageDIFactory _garageFactory;
         private IGarage<IVehicle>? _garage;
 
         public IGarageSnapshot<IVehicle> Garage => _garage ?? throw new Exception("Garage has not been created yet.");
 
-        public GarageHandler(IGarageFactory garageFactory)
+        public GarageHandler(IGarageDIFactory garageFactory)
         {
             _garageFactory = garageFactory;
         }
