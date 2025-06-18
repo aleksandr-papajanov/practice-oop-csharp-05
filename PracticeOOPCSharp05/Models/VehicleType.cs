@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PracticeOOPCSharp05.Models
 {
-    internal enum VheicleType
+    internal enum VehicleType
     {
         Car,
         Boat,

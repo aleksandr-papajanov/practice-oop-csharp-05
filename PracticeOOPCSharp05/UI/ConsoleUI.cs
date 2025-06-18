@@ -7,8 +7,6 @@ namespace PracticeOOPCSharp05.UI
     {
         private readonly IGarageHandler _garageHandler;
 
-        public bool IsComplete { get; set; }
-
         public ConsoleUI(IGarageHandler garageHandler)
         {
             _garageHandler = garageHandler;
@@ -16,22 +14,21 @@ namespace PracticeOOPCSharp05.UI
 
         public void Run()
         {
+            var isComplete = false;
             var menu = new List<IMenuAction>
             {
                 new MenuAction("1", "Create Garage", CreateGarageAction),
                 new MenuAction("2", "Populate Garage", PopulateGarageAction),
                 new MenuAction("3", "Show Garage", ShowGarageAction),
                 new MenuAction("4", "Show statistics", ShowStatistics),
-                new MenuAction("5", "Find vheicle", FindVheicleAction),
-                new MenuAction("6", "Park vheicle", ParkVheicleAction),
-                new MenuAction("7", "Remove vheicle", RemoveVheicleAction),
+                new MenuAction("5", "Find vehicle", FindVehicleAction),
+                new MenuAction("6", "Park vehicle", ParkVehicleAction),
+                new MenuAction("7", "Remove vehicle", RemoveVehicleAction),
                 new MenuAction("8", "Search", SearchAction),
-                new MenuAction("0", "Exit", () => IsComplete = true)
+                new MenuAction("0", "Exit", () => isComplete = true)
             };
 
-            IsComplete = false;
-
-            while (!IsComplete)
+            while (!isComplete)
             {
                 Console.Clear();
                 menu.Print(this);
@@ -103,7 +100,7 @@ namespace PracticeOOPCSharp05.UI
             }
         }
 
-        private void FindVheicleAction()
+        private void FindVehicleAction()
         {
             var registration = Read<string>(Validators.StringNotEmpty, "Enter registration number: ");
 
@@ -120,7 +117,7 @@ namespace PracticeOOPCSharp05.UI
             }
         }
 
-        private void ParkVheicleAction()
+        private void ParkVehicleAction()
         {
             if (_garageHandler.Garage.IsFull)
             {
@@ -208,11 +205,11 @@ namespace PracticeOOPCSharp05.UI
                 (string key, out IMenuAction<IVehicle> result) => (result = menu.FirstOrDefault(a => a.Key == key)!) != null,
                 "Select vehicle type to park: ");
 
-            var vheicle = action.InvokeWithResult();
+            var vehicle = action.InvokeWithResult();
 
             try
             {
-                _garageHandler.ParkVehicle(vheicle);
+                _garageHandler.ParkVehicle(vehicle);
                 Write($"Vehicle parked", UIMessageType.Success);
             }
             catch (Exception ex)
@@ -221,14 +218,14 @@ namespace PracticeOOPCSharp05.UI
             }
         }
 
-        private void RemoveVheicleAction()
+        private void RemoveVehicleAction()
         {
             var registration = Read<string>(Validators.StringNotEmpty, "Enter registration number to remove: ");
             
             try
             {
                 _garageHandler.RemoveVehicle(registration);
-                Write($"Vehicle with registration number removed from garage.", UIMessageType.Success);
+                Write($"Vehicle was removed from garage.", UIMessageType.Success);
             }
             catch (Exception ex)
             {
@@ -245,22 +242,22 @@ namespace PracticeOOPCSharp05.UI
             }
 
             IEnumerable<IVehicle> result = _garageHandler.Garage;
-            bool isFilterComplete = false;
+            bool isComplete = false;
             var filters = new List<string>();
             var menu = new List<IMenuAction<IEnumerable<IVehicle>>>()
             {
-                new MenuAction<IEnumerable<IVehicle>>("1", $"Add filter by Vheicle Type ({UIExtentions.GetEnumOptions<VheicleType>()})", () =>
+                new MenuAction<IEnumerable<IVehicle>>("1", $"Add filter by Vehicle type ({UIExtentions.GetEnumOptions<VehicleType>()})", () =>
                 {
-                    var request = Read<VheicleType>(Validators.Enumeration, "Enter vheicle type: ");
-                    filters.Add("Vheicle type: " + request);
+                    var request = Read<VehicleType>(Validators.Enumeration, "Enter vehicle type: ");
+                    filters.Add("Vehicle type: " + request);
 
                     var type = request switch
                     {
-                        VheicleType.Airplane => typeof(Airplane),
-                        VheicleType.Boat => typeof(Boat),
-                        VheicleType.Bus => typeof(Bus),
-                        VheicleType.Car => typeof(Car),
-                        VheicleType.Motorcycle => typeof(Motorcycle),
+                        VehicleType.Airplane => typeof(Airplane),
+                        VehicleType.Boat => typeof(Boat),
+                        VehicleType.Bus => typeof(Bus),
+                        VehicleType.Car => typeof(Car),
+                        VehicleType.Motorcycle => typeof(Motorcycle),
                         _ => throw new ArgumentException("Invalid vehicle type.")
                     };
 
@@ -341,14 +338,14 @@ namespace PracticeOOPCSharp05.UI
                 }),
                 new MenuAction<IEnumerable<IVehicle>>("0", "Exit", () =>
                 {
-                    isFilterComplete = true;
+                    isComplete = true;
                     return null!;
                 })
             };
 
             menu.Print(this);
 
-            while (!isFilterComplete)
+            while (!isComplete)
             {
                 var action = Read((string key, out IMenuAction<IEnumerable<IVehicle>> result) =>
                     (result = menu.FirstOrDefault(a => a.Key == key)!) != null,
